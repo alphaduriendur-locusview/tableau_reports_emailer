@@ -1,0 +1,5 @@
+tableau_user = 'tabadmin'
+tableau_passwd = 'locus123View'
+tableau_server_site = ''
+tableau_server = 'https://rca.locusview.com/'
+tableau_server_target = 'Exelon Utility'
