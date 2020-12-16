@@ -6,6 +6,8 @@ from tableau_config import tableau_user,\
 
 tableau_auth = TSC.TableauAuth(tableau_user, tableau_passwd, '')
 server = TSC.Server(tableau_server)
+server.version = '2.7'
+print("Server version: {}".format(server.version))
 current_date=date.today()
 print("Today's date: ", current_date)
 save_directory = os.path.join(os.getcwd(),"download",current_date.isoformat())
@@ -27,10 +29,11 @@ def download_and_send(workbook):
     try:
         server.workbooks.populate_views(workbook)
         print("\nThe views for {0}".format(workbook.name))
-        print([view.name for view in workbook.views])
         for view in workbook.views:
-            print("Failed report view: {}".format(view.name))
-
+            print("Report Name: {}".format(view.name))
+            server.views.populate_pdf(view)
+            download_file = os.path.join(save_directory,view.name+".pdf")
+            print("Downloading at: {}".format(download_file))
     except Exception as e:
         print("Failure in downloading workbook!\nError: \n{}".format(str(e)))
 
