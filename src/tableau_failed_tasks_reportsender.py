@@ -31,9 +31,13 @@ def download_and_send(workbook):
         print("\nThe views for {0}".format(workbook.name))
         for view in workbook.views:
             print("Report Name: {}".format(view.name))
-            server.views.populate_pdf(view)
-            download_file = os.path.join(save_directory,view.name+".pdf")
+            print("Report ID: {}".format(view.id))
+            server.views.populate_preview_image(view)
+            download_file = os.path.join(save_directory,view.name+".png")
             print("Downloading at: {}".format(download_file))
+            with open(download_file,'wb') as f:
+                f.write(view.preview_image)
+                print("Download Successfull!")
     except Exception as e:
         print("Failure in downloading workbook!\nError: \n{}".format(str(e)))
 
@@ -44,6 +48,7 @@ def tableau_export():
         with server.auth.sign_in(tableau_auth):
             wb = server.workbooks.get_by_id(tableau_server_workbook_id)
             print("Workbook found!")
+            print("Workbook ID: {}".format(tableau_server_workbook_id))
             download_and_send(wb)
     except Exception as e:
         print("Could not get Exelon Failed task report workbook!\nError: \n{}".format(str(e)))
