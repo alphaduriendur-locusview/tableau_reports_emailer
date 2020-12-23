@@ -1,5 +1,6 @@
 import os
 from datetime import date
+import json
 import tableauserverclient as TSC
 from tableau_config import tableau_user,\
     tableau_passwd, tableau_server, tableau_server_workbook_id
@@ -16,6 +17,31 @@ pdf_req_option = TSC.PDFRequestOptions(page_type=TSC.PDFRequestOptions.PageType.
                                        orientation=TSC.PDFRequestOptions.Orientation.Landscape,
                                        maxage=1)
 
+
+def read_list():
+    with open('email_list.json') as f:
+        data = json.load(f)
+    return data
+
+
+def create_email_obj(data):
+    email_list = []
+    email_list2 = {}
+    for k, v in data.items():
+        report_name = str(k) +  " - Failed Task Report"
+        temp_obj = {
+            "client": str(k),
+            "emails": v,
+            "filepath": os.path.join(save_directory,str(k) + " - Failed Task Report.pdf"),
+            "filename": report_name+".pdf"
+        }
+        email_list.append(temp_obj)
+        if report_name not in email_list2:
+            email_list2[report_name] = temp_obj
+
+    return email_list2
+
+
 def create_out_dir():
     try:
         print("Validating save location:{0}".format(save_directory))
@@ -24,26 +50,34 @@ def create_out_dir():
         print("Could not validate save location. Error!\n {}.".format(str(e)))
         raise
 
-def download_and_send(workbook):
+
+def download(workbook):
     if not workbook:
         print("No workbook found!")
         return
 
     create_out_dir()
+    emails = create_email_obj(read_list())
+    print(emails.keys())
+
     try:
         server.workbooks.populate_views(workbook)
-        print("\nThe views for {0}".format(workbook.name))
+        print("\nThe views for {0}\n".format(workbook.name))
         for view in workbook.views:
+            print("-------------------------------------------------------------")
             print("Report Name: {}".format(view.name))
-            print("Report ID: {}".format(view.id))
+            print(type(view.name))
             server.views.populate_pdf(view, pdf_req_option)
             download_file = os.path.join(save_directory,view.name+".pdf")
             print("Downloading at: {}".format(download_file))
             with open(download_file,'wb') as f:
                 f.write(view.pdf)
-                print("Download Successfull!")
+                print("Download Successfull!\n")
+                if view.name in emails:
+                    print("WOHO TIME TO SEND AN EMAIL!")
+            print("-------------------------------------------------------------")
     except Exception as e:
-        print("Failure in downloading workbook!\nError: \n{}".format(str(e)))
+        print("Failure in downloading and sending workbook!\nError: \n{}".format(str(e)))
 
 
 def tableau_export():
@@ -52,8 +86,7 @@ def tableau_export():
         with server.auth.sign_in(tableau_auth):
             wb = server.workbooks.get_by_id(tableau_server_workbook_id)
             print("Workbook found!")
-            print("Workbook ID: {}".format(tableau_server_workbook_id))
-            download_and_send(wb)
+            download(wb)
     except Exception as e:
         print("Could not get Exelon Failed task report workbook!\nError: \n{}".format(str(e)))
 

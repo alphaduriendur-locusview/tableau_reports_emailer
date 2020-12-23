@@ -1,0 +1,12 @@
+{
+    "sendgrid": "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",
+    "mssql": {
+        "driver": "{SQL Server}",
+        "server": "172.31.2.1",
+        "database": "EXL",
+        "user": "sde",
+        "password": "locus123View"
+    },
+    "test": "true",
+    "testEmails": ["arko.basu@locusview.com", "andrew.dunham@locusview.com"]
+}
