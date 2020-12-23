@@ -4,6 +4,7 @@ import json
 import tableauserverclient as TSC
 from tableau_config import tableau_user,\
     tableau_passwd, tableau_server, tableau_server_workbook_id
+from email_setup import NoticeEmail
 
 tableau_auth = TSC.TableauAuth(tableau_user, tableau_passwd, '')
 server = TSC.Server(tableau_server)
@@ -16,6 +17,10 @@ save_directory = os.path.join(os.getcwd(),"download",current_date.isoformat())
 pdf_req_option = TSC.PDFRequestOptions(page_type=TSC.PDFRequestOptions.PageType.A4,
                                        orientation=TSC.PDFRequestOptions.Orientation.Landscape,
                                        maxage=1)
+email_body = """<h3>Please find the weekly failed task report attached.</h3>
+            <br />
+            <br />
+            <p>This is an automated notification. Please do not directly reply to this email.</p>"""
 
 
 def read_list():
@@ -49,7 +54,7 @@ def create_out_dir():
         raise
 
 
-def download(workbook):
+def download_and_send(workbook):
     if not workbook:
         print("No workbook found!")
         return
@@ -71,10 +76,16 @@ def download(workbook):
                 print("Download Successfull!\n")
                 if view.name in emails:
                     print("Attempting to send it as an email.")
-                    print("Sending to: {}".format(emails[view.name]['emails']))
+                    weekly_email = NoticeEmail(msg_subject="Weekly Failed Task Report",
+                                             msg_to=emails[view.name]['emails'],
+                                             msg_filename=emails[view.name]['filename'],
+                                             msg_attachment=emails[view.name]['filepath'],
+                                             msg_content=email_body)
+                    weekly_email.send_mail()
             print("-------------------------------------------------------------")
     except Exception as e:
-        print("Failure in downloading and sending workbook!\nError: \n{}".format(str(e)))
+        print("Failure in downloading and sending workbook!\nError: \n")
+        print(e)
 
 
 def tableau_export():
@@ -83,7 +94,7 @@ def tableau_export():
         with server.auth.sign_in(tableau_auth):
             wb = server.workbooks.get_by_id(tableau_server_workbook_id)
             print("Workbook found!")
-            download(wb)
+            download_and_send(wb)
     except Exception as e:
         print("Could not get Exelon Failed task report workbook!\nError: \n{}".format(str(e)))
 
