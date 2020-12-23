@@ -6,11 +6,15 @@ from tableau_config import tableau_user,\
 
 tableau_auth = TSC.TableauAuth(tableau_user, tableau_passwd, '')
 server = TSC.Server(tableau_server)
-server.version = '2.7'
+print("Tableau server: {}".format(tableau_server))
+server.version = '3.9'
 print("Server version: {}".format(server.version))
 current_date=date.today()
 print("Today's date: ", current_date)
 save_directory = os.path.join(os.getcwd(),"download",current_date.isoformat())
+pdf_req_option = TSC.PDFRequestOptions(page_type=TSC.PDFRequestOptions.PageType.A4,
+                                       orientation=TSC.PDFRequestOptions.Orientation.Landscape,
+                                       maxage=1)
 
 def create_out_dir():
     try:
@@ -32,11 +36,11 @@ def download_and_send(workbook):
         for view in workbook.views:
             print("Report Name: {}".format(view.name))
             print("Report ID: {}".format(view.id))
-            server.views.populate_preview_image(view)
-            download_file = os.path.join(save_directory,view.name+".png")
+            server.views.populate_pdf(view, pdf_req_option)
+            download_file = os.path.join(save_directory,view.name+".pdf")
             print("Downloading at: {}".format(download_file))
             with open(download_file,'wb') as f:
-                f.write(view.preview_image)
+                f.write(view.pdf)
                 print("Download Successfull!")
     except Exception as e:
         print("Failure in downloading workbook!\nError: \n{}".format(str(e)))
