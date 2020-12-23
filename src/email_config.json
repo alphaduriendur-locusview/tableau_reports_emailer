@@ -1,5 +1,5 @@
 {
     "sendgrid": "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",
-    "test": "true",
+    "test": "false",
     "testEmails": ["arko.basu@locusview.com"]
 }
