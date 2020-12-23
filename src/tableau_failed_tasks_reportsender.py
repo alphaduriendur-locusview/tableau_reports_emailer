@@ -25,17 +25,15 @@ def read_list():
 
 
 def create_email_obj(data):
-    email_list = []
     email_list2 = {}
     for k, v in data.items():
         report_name = str(k) +  " - Failed Task Report"
         temp_obj = {
-            "client": str(k),
+            "report": report_name,
             "emails": v,
-            "filepath": os.path.join(save_directory,str(k) + " - Failed Task Report.pdf"),
+            "filepath": os.path.join(save_directory, report_name+".pdf"),
             "filename": report_name+".pdf"
         }
-        email_list.append(temp_obj)
         if report_name not in email_list2:
             email_list2[report_name] = temp_obj
 
@@ -58,7 +56,6 @@ def download(workbook):
 
     create_out_dir()
     emails = create_email_obj(read_list())
-    print(emails.keys())
 
     try:
         server.workbooks.populate_views(workbook)
@@ -66,7 +63,6 @@ def download(workbook):
         for view in workbook.views:
             print("-------------------------------------------------------------")
             print("Report Name: {}".format(view.name))
-            print(type(view.name))
             server.views.populate_pdf(view, pdf_req_option)
             download_file = os.path.join(save_directory,view.name+".pdf")
             print("Downloading at: {}".format(download_file))
@@ -74,7 +70,8 @@ def download(workbook):
                 f.write(view.pdf)
                 print("Download Successfull!\n")
                 if view.name in emails:
-                    print("WOHO TIME TO SEND AN EMAIL!")
+                    print("Attempting to send it as an email.")
+                    print("Sending to: {}".format(emails[view.name]['emails']))
             print("-------------------------------------------------------------")
     except Exception as e:
         print("Failure in downloading and sending workbook!\nError: \n{}".format(str(e)))
