@@ -301,4 +301,4 @@ if __name__ == "__main__":
         else:
             __parser__.error("Email list was not provided. Please enter a default email address and try again!")
     if args.runConfig:
-        tableau_emailer(args.runEmailJob[0])
+        tableau_emailer(args.runConfig[0])
