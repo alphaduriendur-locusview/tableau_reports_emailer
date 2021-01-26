@@ -4,8 +4,10 @@ import json
 import tableauserverclient as TSC
 import argparse
 
+
 __version__ = "1.0"
 __working_dir__ = os.getcwd()
+__save_directory__ = os.path.join(__working_dir__,'downloads')
 
 
 def load_default_config():
@@ -32,6 +34,8 @@ def get_parser(version):
                                                                       'option to query Views/Reports within a Workbook')
     parser.add_argument('--emailList', '-e', nargs='*', help = 'add email list. This is required by the -gWC/-gWV '
                                                                'options')
+    parser.add_argument('--runEmailJob', '-r', nargs=1, help='run tableau reports emailer job. Required Argument: '
+                                                             '<config-file>. For Example: USIC-FailedTaskReport.json')
     return parser
 
 
@@ -64,6 +68,14 @@ def _dump_view_to_config(view, email_list=["arko.basu@locusview.com"]):
     with open(filename, "w") as f:
         f.write(json_obj)
     print("Config successfully generated at: {}".format(filename))
+
+
+def _create_output_directory():
+    try:
+        os.makedirs(__save_directory__, exist_ok=True)
+    except OSError as e:
+        print("Could not validate download location. Error!\n {}.".format(str(e)))
+        raise
 
 
 class TableauObject:
@@ -149,6 +161,25 @@ class TableauObject:
             self.processing_view, x = self.server.views.get(req_options=view_req_opt)
             _dump_view_to_config(self.processing_view[0], email_list)
 
+    def download(self,tableau_export_config):
+        if len(tableau_export_config['views']) == 1:
+            view_id = tableau_export_config['views'][0]['view_id']
+            view_name = tableau_export_config['views'][0]['view_name']
+            print("Attepting download of View ID: {0}\tView Name: {1}".format(view_id, view_name))
+            with self.server.auth.sign_in(self.auth):
+                view_req_opt = TSC.RequestOptions()
+                view_req_opt.filter.add(TSC.Filter(TSC.RequestOptions.Field.Name,
+                                                   TSC.RequestOptions.Operator.Equals,
+                                                   view_name))
+                self.processing_view, x = self.server.views.get(req_options=view_req_opt)
+                print(self.processing_view)
+                self.server.views.populate_pdf(self.processing_view[0], self.pdf_req_option)
+                download_file = os.path.join(__save_directory__,self.processing_view[0].name + ".pdf")
+                with open(download_file, 'wb') as f:
+                    f.write(self.processing_view[0].pdf)
+                    print("Download successful. File downloaded at: {}".format(download_file))
+                email =
+
 
 def list_all_workbooks_on_server():
     print("Listing all workbooks on the server")
@@ -213,6 +244,26 @@ def generate_view_config(view_name, email_list):
         print("Error in Generating config for View: {}\n".format(view_name), e)
 
 
+def tableau_emailer(config_file):
+    config_filepath = os.path.join(__working_dir__, 'configs', config_file)
+    print(config_filepath)
+    if not os.path.exists(config_filepath):
+        print("Error: Couldn't find the config file! Please generate config first! Use -h for help")
+        return
+
+    with open(config_filepath, 'r') as tableau_config:
+        data = json.load(tableau_config)
+
+    #try:
+        tableau_obj = TableauObject(__default_config__['tableau_user'],
+                                    __default_config__['tableau_password'],
+                                    __default_config__['tableau_server'])
+        tableau_obj.set_server_version('3.9')
+        _create_output_directory()
+        tableau_obj.download(data)
+    #except Exception as e:
+     #   print("Error in running tableau email job for config: {}\n".format(config_file),e)
+
 __parser__ = get_parser(__version__)
 __default_config__ = load_default_config()
 
@@ -233,3 +284,5 @@ if __name__ == "__main__":
             generate_view_config(args.generateViewConfig[0],args.emailList)
         else:
             generate_view_config(args.generateViewConfig[0],[])
+    if args.runEmailJob:
+        tableau_emailer(args.runEmailJob[0])
