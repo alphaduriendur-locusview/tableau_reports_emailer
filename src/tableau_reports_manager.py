@@ -3,11 +3,18 @@ import os
 import json
 import tableauserverclient as TSC
 import argparse
+from email_setup import NoticeEmail
+from datetime import date
 
 
 __version__ = "1.0"
 __working_dir__ = os.getcwd()
-__save_directory__ = os.path.join(__working_dir__,'downloads')
+__save_directory__ = os.path.join(__working_dir__,'downloads', date.today().isoformat())
+__email_body__ = """<h3>Please find the attached Tableau report.</h3>
+                 <br />
+                 <br />
+                 <p>This is an automated notification. Please do not directly reply to this email.</p>"""
+
 
 
 def load_default_config():
@@ -165,6 +172,7 @@ class TableauObject:
         if len(tableau_export_config['views']) == 1:
             view_id = tableau_export_config['views'][0]['view_id']
             view_name = tableau_export_config['views'][0]['view_name']
+            print("------------------------------------------")
             print("Attepting download of View ID: {0}\tView Name: {1}".format(view_id, view_name))
             with self.server.auth.sign_in(self.auth):
                 view_req_opt = TSC.RequestOptions()
@@ -172,13 +180,20 @@ class TableauObject:
                                                    TSC.RequestOptions.Operator.Equals,
                                                    view_name))
                 self.processing_view, x = self.server.views.get(req_options=view_req_opt)
-                print(self.processing_view)
                 self.server.views.populate_pdf(self.processing_view[0], self.pdf_req_option)
                 download_file = os.path.join(__save_directory__,self.processing_view[0].name + ".pdf")
                 with open(download_file, 'wb') as f:
                     f.write(self.processing_view[0].pdf)
                     print("Download successful. File downloaded at: {}".format(download_file))
-                email =
+                email_job = NoticeEmail(msg_subject=tableau_export_config['subject'],
+                                        msg_to=tableau_export_config['to'],
+                                        msg_filename=self.processing_view[0].name + ".pdf",
+                                        msg_attachment=download_file,
+                                        msg_content = __email_body__,
+                                        key=__default_config__['sendgrid'],
+                                        is_test=tableau_export_config['test'])
+                email_job.send_mail()
+                print("------------------------------------------")
 
 
 def list_all_workbooks_on_server():
@@ -254,15 +269,15 @@ def tableau_emailer(config_file):
     with open(config_filepath, 'r') as tableau_config:
         data = json.load(tableau_config)
 
-    #try:
+    try:
         tableau_obj = TableauObject(__default_config__['tableau_user'],
                                     __default_config__['tableau_password'],
                                     __default_config__['tableau_server'])
         tableau_obj.set_server_version('3.9')
         _create_output_directory()
         tableau_obj.download(data)
-    #except Exception as e:
-     #   print("Error in running tableau email job for config: {}\n".format(config_file),e)
+    except Exception as e:
+        print("Error in running tableau email job for config: {}\n".format(config_file),e)
 
 __parser__ = get_parser(__version__)
 __default_config__ = load_default_config()
@@ -283,6 +298,6 @@ if __name__ == "__main__":
             print("Email list provided: {}".format(args.emailList))
             generate_view_config(args.generateViewConfig[0],args.emailList)
         else:
-            generate_view_config(args.generateViewConfig[0],[])
+            print("Error: Email list was not provided. Please enter a default email address and try again!")
     if args.runEmailJob:
         tableau_emailer(args.runEmailJob[0])

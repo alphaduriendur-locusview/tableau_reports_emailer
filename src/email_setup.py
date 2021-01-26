@@ -8,13 +8,13 @@ import base64
 class NoticeEmail:
     '''Class representing a Sendgrid email'''
 
-    def __init__(self, msg_subject, msg_content, msg_attachment, msg_filename, msg_to=['kyle.surowiec@locusview.com', 'casey.mullan@locusview.com', 'fred.scholcoff@locusview.com'], msg_from='notifications@locusview.com'):
-        with open('email_config.json', 'r') as config:
-            data = json.load(config)
-        key = data['sendgrid']
+    def __init__(self, msg_subject, msg_content, msg_attachment, msg_filename, msg_to=['kyle.surowiec@locusview.com', 'casey.mullan@locusview.com', 'fred.scholcoff@locusview.com'], msg_from='notifications@locusview.com', key=None, is_test=False):
+        if key is None:
+            print("Error. The Sendgrid KEY cannot be None! ")
+            return
 
-        self.test_list = data['testEmails']
-        self.is_test = data['test']
+        self.test_list = msg_to
+        self.is_test = is_test
         self.sg = sendgrid.SendGridAPIClient(os.environ.get('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'))
         self.to_email = msg_to
         self.from_email = msg_from
