@@ -1,0 +1,8 @@
+{
+  "sendgrid": "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",
+  "tableau_user": "tabadmin",
+  "tableau_password": "locus123View",
+  "tableau_server": "https://tab.locusview.com/",
+  "test": true,
+  "test_email": ["arko.basu@locusview.com"]
+}
