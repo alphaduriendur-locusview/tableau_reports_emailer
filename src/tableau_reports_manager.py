@@ -43,7 +43,7 @@ def _list_workbook(tableau_server, wb):
         print("---------------------------------------")
 
 
-def _dump_view_to_config(view):
+def _dump_view_to_config(view, email_list=["arko.basu@locusview.com"]):
     print("Writing Config for view: {}".format(view.name))
     write_dict = {
         "workbook_id": view.workbook_id,
@@ -51,9 +51,7 @@ def _dump_view_to_config(view):
             "view_id": view.id,
             "view_name": view.name,
         }],
-        "to": [
-            "arko.basu@locusview.com"
-        ],
+        "to": email_list,
         "body": "<HTML>Please find the attachment below. Do not reply to this message."
                 " This is an automated email</HTML>",
         "subject": view.name,
