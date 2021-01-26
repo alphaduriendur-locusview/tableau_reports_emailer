@@ -43,6 +43,29 @@ def _list_workbook(tableau_server, wb):
         print("---------------------------------------")
 
 
+def _dump_view_to_config(view):
+    print("Writing Config for view: {}".format(view.name))
+    write_dict = {
+        "workbook_id": view.workbook_id,
+        "views": [{
+            "view_id": view.id,
+            "view_name": view.name,
+        }],
+        "to": [
+            "arko.basu@locusview.com"
+        ],
+        "body": "<HTML>Please find the attachment below. Do not reply to this message."
+                " This is an automated email</HTML>",
+        "subject": view.name,
+        "test": True
+    }
+    json_obj = json.dumps(write_dict, indent=4)
+    filename = os.path.join(__working_dir__,'configs',view.name.replace(" ","")+".json")
+    with open(filename, "w") as f:
+        f.write(json_obj)
+    print("Config successfully generated at: {}".format(filename))
+
+
 class TableauObject:
     workbook_ids = None
 
@@ -124,9 +147,7 @@ class TableauObject:
                                                TSC.RequestOptions.Operator.Equals,
                                                view_name))
             self.processing_view, x = self.server.views.get(req_options=view_req_opt)
-            print("------------------------")
-            print("View Name: {}".format(self.processing_view[0].name))
-            print("------------------------")
+            _dump_view_to_config(self.processing_view[0])
 
 
 def list_all_workbooks_on_server():
