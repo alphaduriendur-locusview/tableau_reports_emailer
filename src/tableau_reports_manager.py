@@ -19,14 +19,21 @@ def get_parser(version):
     parser.add_argument('--version', '-v', action='version', version='%(prog)s - {0}'.format(version))
     parser.add_argument('--list', '-l', help='list all workbooks from the server', action='store_true')
     parser.add_argument('--search', '-s', help='search for Tableau workbook of name. <string>', nargs=1)
-    parser.add_argument('--query', '-q', help='query all Views in a certain workbook (by ID).'
-                                              ' Required Argument: <workbook-id>.'
-                                              'Use the -s/-l option to find the ID of a workbook',
-                        nargs=1)
+    parser.add_argument('--query', '-q', nargs=1, help='Prints all Views/Reports in a certain workbook (by ID). '
+                                                       'Required Argument: <workbook-id>. Use the '
+                                                       '-s/-l option to find the ID of a workbook')
+    parser.add_argument('--generateWorkbookConfig', '-gWC', nargs=1, help='generate config for the entire workbook. '
+                                                                          'This will create a master config for all '
+                                                                          'the views within the workbook. Required '
+                                                                          'Argument: <workbook-id>')
+    parser.add_argument('--generateViewConfig', '-gVC', nargs=1, help='generate config for a certain view.'
+                                                                      'This will create a config for a single view.'
+                                                                      'Required Argument: <view-id>. Use -q option to '
+                                                                      'query Views/Reports within a Workbook')
     return parser
 
 
-def _process_workbook(tableau_server, wb):
+def _list_workbook(tableau_server, wb):
     print("Processing Workbook: {0}".format(wb.name))
     tableau_server.workbooks.populate_views(wb)
     for view in wb.views:
@@ -42,11 +49,9 @@ class TableauObject:
     def __init__(self, tableau_user, tableau_password, tableau_server):
         self.auth = TSC.TableauAuth(username=tableau_user, password=tableau_password)
         self.server = TSC.Server(tableau_server)
-        self.__setdefaults()
-
-    def __setdefaults(self):
-        # print("Setting Defaults")
         self.workbook_ids = []
+        self.processing_workbook = None
+        self.processing_view = None
         self.pdf_req_option = TSC.PDFRequestOptions(page_type=TSC.PDFRequestOptions.PageType.A4,
                                                     orientation=TSC.PDFRequestOptions.Orientation.Landscape,
                                                     maxage=1)
@@ -82,7 +87,27 @@ class TableauObject:
         print("Querying Workbook with ID: ", wb_id)
         with self.server.auth.sign_in(self.auth):
             wb = self.server.workbooks.get_by_id(wb_id)
-            _process_workbook(self.server, wb)
+            _list_workbook(self.server, wb)
+
+    def process_workbook(self, wb_id):
+        print("Attempting to generate config for Workbook ID: {}".format(wb_id))
+        with self.server.auth.sign_in(self.auth):
+            self.processing_workbook = self.server.workbooks.get_by_id(wb_id)
+            print("------------------------")
+            print("Workbook Name: {}".format(self.processing_workbook.name))
+            print("------------------------")
+
+    def process_view(self, view_name):
+        print("Attempting to generate config for View name: {}".format(view_name))
+        with self.server.auth.sign_in(self.auth):
+            view_req_opt = TSC.RequestOptions()
+            view_req_opt.filter.add(TSC.Filter(TSC.RequestOptions.Field.Name,
+                                               TSC.RequestOptions.Operator.Equals,
+                                               view_name))
+            self.processing_view, x = self.server.views.get(req_options=view_req_opt)
+            print("------------------------")
+            print("View Name: {}".format(self.processing_view[0].name))
+            print("------------------------")
 
 
 def list_all_workbooks_on_server():
@@ -124,6 +149,30 @@ def query_workbook_by_id(workbook_id):
         print("Error in Querying for Workbook by ID\n", e)
 
 
+def generate_workbook_config(workbook_id):
+    print("Generating Tableau Export Config for Workbook: {}".format(workbook_id))
+    try:
+        tableau_obj = TableauObject(__default_config__['tableau_user'],
+                                    __default_config__['tableau_password'],
+                                    __default_config__['tableau_server'])
+        tableau_obj.set_server_version('3.9')
+        tableau_obj.process_workbook(workbook_id)
+    except Exception as e:
+        print("Error in Generating config for Workbook: {}".format(workbook_id), e)
+
+
+def generate_view_config(view_id):
+    print("Generating Tableau Export Config for View: {}".format(view_id))
+    try:
+        tableau_obj = TableauObject(__default_config__['tableau_user'],
+                                    __default_config__['tableau_password'],
+                                    __default_config__['tableau_server'])
+        tableau_obj.set_server_version('3.9')
+        tableau_obj.process_view(view_id)
+    except Exception as e:
+        print("Error in Generating config for View: {}\n".format(view_id), e)
+
+
 __parser__ = get_parser(__version__)
 __default_config__ = load_default_config()
 
@@ -136,3 +185,8 @@ if __name__ == "__main__":
         search_for_workbook_name(args.search[0])
     if args.query:
         query_workbook_by_id(args.query[0])
+    if args.generateWorkbookConfig:
+        generate_workbook_config(args.generateWorkbookConfig[0])
+    if args.generateViewConfig:
+        generate_view_config(args.generateViewConfig[0])
+
