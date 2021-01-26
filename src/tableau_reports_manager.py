@@ -41,8 +41,9 @@ def get_parser(version):
                                                                       'option to query Views/Reports within a Workbook')
     parser.add_argument('--emailList', '-e', nargs='*', help = 'add email list. This is required by the -gWC/-gWV '
                                                                'options')
-    parser.add_argument('--runEmailJob', '-r', nargs=1, help='run tableau reports emailer job. Required Argument: '
-                                                             '<config-file>. For Example: USIC-FailedTaskReport.json')
+    parser.add_argument('--runConfig', '-r', nargs=1, help='run tableau reports emailer job. '
+                                                           'Required Argument: <config-file> '
+                                                           'For Example: USIC-FailedTaskReport.json')
     return parser
 
 
@@ -298,6 +299,6 @@ if __name__ == "__main__":
             print("Email list provided: {}".format(args.emailList))
             generate_view_config(args.generateViewConfig[0],args.emailList)
         else:
-            print("Error: Email list was not provided. Please enter a default email address and try again!")
-    if args.runEmailJob:
+            __parser__.error("Email list was not provided. Please enter a default email address and try again!")
+    if args.runConfig:
         tableau_emailer(args.runEmailJob[0])
