@@ -18,6 +18,7 @@ def get_parser(version):
                                      prog='Tableau Reports Manager')
     parser.add_argument('--version', '-v', action='version', version='%(prog)s - {0}'.format(version))
     parser.add_argument('--list', '-l', help='list all workbooks from the server', action='store_true')
+    parser.add_argument('--search', '-s', help='search for Tableau workbook of name. <string>', nargs=1)
     return parser
 
 
@@ -56,6 +57,14 @@ class TableauObject:
                 print("# Workbook id: {0}".format(wb_id))
                 print("# Workbook name: {0}".format(wb.name))
 
+    def search_for_matching_workbook_name(self, search_str):
+        with self.server.auth.sign_in(self.auth):
+            for wb_id in self.workbook_ids:
+                wb = self.server.workbooks.get_by_id(wb_id)
+                if search_str.upper() in wb.name.upper():
+                    print("Matching Workbook found: {0}".format(wb.name))
+                    print(" ->Workbook id: {0}".format(wb_id))
+
 
 def list_all_workbooks_on_server():
     print("Listing all workbooks on the server")
@@ -67,8 +76,20 @@ def list_all_workbooks_on_server():
         tableau_obj.get_all_workbooks()
         tableau_obj.print_all_workbooks()
     except Exception as e:
-        print("Error", e)
+        print("Error in Printing all Workbooks found at the server\n", e)
 
+
+def search_for_workbook_name(search_str):
+    print("Searching at server for workbook names matching:", search_str)
+    try:
+        tableau_obj = TableauObject(__default_config__['tableau_user'],
+                                    __default_config__['tableau_password'],
+                                    __default_config__['tableau_server'])
+        tableau_obj.set_server_version('3.9')
+        tableau_obj.get_all_workbooks()
+        tableau_obj.search_for_matching_workbook_name(search_str)
+    except Exception as e:
+        print("Error in Searching for Workbook name\n", e)
 
 __parser__ = get_parser(__version__)
 __default_config__ = load_default_config()
@@ -78,5 +99,5 @@ if __name__ == "__main__":
     args = __parser__.parse_args()
     if args.list:
         list_all_workbooks_on_server()
-
-
+    if args.search:
+        search_for_workbook_name(args.search[0])
