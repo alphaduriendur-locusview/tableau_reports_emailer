@@ -30,6 +30,8 @@ def get_parser(version):
                                                                       'This will create a config for a single view. '
                                                                       'Required Argument: "<workbook-name>". Use -q '
                                                                       'option to query Views/Reports within a Workbook')
+    parser.add_argument('--emailList', '-e', nargs='*', help = 'add email list. This is required by the -gWC/-gWV '
+                                                               'options')
     return parser
 
 
@@ -137,7 +139,7 @@ class TableauObject:
                         print("Error: Bad input!")
             print("------------------------")
 
-    def process_view(self, view_name):
+    def process_view(self, view_name, email_list):
         print("Attempting to generate config for View name: {}".format(view_name))
         with self.server.auth.sign_in(self.auth):
             view_req_opt = TSC.RequestOptions()
@@ -145,7 +147,7 @@ class TableauObject:
                                                TSC.RequestOptions.Operator.Equals,
                                                view_name))
             self.processing_view, x = self.server.views.get(req_options=view_req_opt)
-            _dump_view_to_config(self.processing_view[0])
+            _dump_view_to_config(self.processing_view[0], email_list)
 
 
 def list_all_workbooks_on_server():
@@ -199,14 +201,14 @@ def generate_workbook_config(workbook_id):
         print("Error in Generating config for Workbook: {}".format(workbook_id), e)
 
 
-def generate_view_config(view_name):
+def generate_view_config(view_name, email_list):
     print("Generating Tableau Export Config for View: {}".format(view_name))
     try:
         tableau_obj = TableauObject(__default_config__['tableau_user'],
                                     __default_config__['tableau_password'],
                                     __default_config__['tableau_server'])
         tableau_obj.set_server_version('3.9')
-        tableau_obj.process_view(view_name)
+        tableau_obj.process_view(view_name,email_list)
     except Exception as e:
         print("Error in Generating config for View: {}\n".format(view_name), e)
 
@@ -226,5 +228,8 @@ if __name__ == "__main__":
     if args.generateWorkbookConfig:
         generate_workbook_config(args.generateWorkbookConfig[0])
     if args.generateViewConfig:
-        generate_view_config(args.generateViewConfig[0])
-
+        if args.emailList:
+            print("Email list provided: {}".format(args.emailList))
+            generate_view_config(args.generateViewConfig[0],args.emailList)
+        else:
+            generate_view_config(args.generateViewConfig[0],[])
