@@ -31,10 +31,6 @@ def get_parser(version):
     parser.add_argument('--query', '-q', nargs=1, help='Prints all Views/Reports in a certain workbook (by ID). '
                                                        'Required Argument: <workbook-id>. Use the '
                                                        '-s/-l option to find the ID of a workbook')
-    parser.add_argument('--generateWorkbookConfig', '-gWC', nargs=1, help='generate config for the entire workbook. '
-                                                                          'This will create a master config for all '
-                                                                          'the views within the workbook. Required '
-                                                                          'Argument: <workbook-id>')
     parser.add_argument('--generateViewConfig', '-gVC', nargs=1, help='generate config for a certain view.'
                                                                       'This will create a config for a single view. '
                                                                       'Required Argument: "<workbook-name>". Use -q '
@@ -132,33 +128,6 @@ class TableauObject:
             wb = self.server.workbooks.get_by_id(wb_id)
             _list_workbook(self.server, wb)
 
-    def process_workbook(self, wb_id):
-        print("Attempting to generate config for Workbook ID: {}".format(wb_id))
-        with self.server.auth.sign_in(self.auth):
-            fetch_workbook = self.server.workbooks.get_by_id(wb_id)
-            self.processing_workbook = fetch_workbook
-            print("------------------------")
-            print("Workbook Name: {}".format(self.processing_workbook.name))
-            self.server.workbooks.populate_views(self.processing_workbook)
-            print("{0} Views were detected in this workbook".format(len(self.processing_workbook.views)))
-            if len(self.processing_workbook.views) > 1:
-                while True:
-                    inp = input("More than 1 view was detected in this workbook. Press\n -> (Y)es - want to generate "
-                                "1 master config OR\n -> (N)o - generate separate configs for each view inside workbook"
-                                " OR\n -> (E)xit - to cancel this step\n")
-                    if inp.upper() == "Y":
-                        print("TODO: Generating Master config for entire workbook")
-                        break
-                    elif inp.upper() == "N":
-                        print("TODO: Generating config for each view inside workbook")
-                        break
-                    elif inp.upper() == "E":
-                        print("Exiting")
-                        return
-                    else:
-                        print("Error: Bad input!")
-            print("------------------------")
-
     def process_view(self, view_name, email_list):
         print("Attempting to generate config for View name: {}".format(view_name))
         with self.server.auth.sign_in(self.auth):
@@ -236,18 +205,6 @@ def query_workbook_by_id(workbook_id):
         print("Error in Querying for Workbook by ID\n", e)
 
 
-def generate_workbook_config(workbook_id):
-    print("Generating Tableau Export Config for Workbook: {}".format(workbook_id))
-    try:
-        tableau_obj = TableauObject(__default_config__['tableau_user'],
-                                    __default_config__['tableau_password'],
-                                    __default_config__['tableau_server'])
-        tableau_obj.set_server_version('3.9')
-        tableau_obj.process_workbook(workbook_id)
-    except Exception as e:
-        print("Error in Generating config for Workbook: {}".format(workbook_id), e)
-
-
 def generate_view_config(view_name, email_list):
     print("Generating Tableau Export Config for View: {}".format(view_name))
     try:
@@ -292,8 +249,6 @@ if __name__ == "__main__":
         search_for_workbook_name(args.search[0])
     if args.query:
         query_workbook_by_id(args.query[0])
-    if args.generateWorkbookConfig:
-        generate_workbook_config(args.generateWorkbookConfig[0])
     if args.generateViewConfig:
         if args.emailList:
             print("Email list provided: {}".format(args.emailList))
