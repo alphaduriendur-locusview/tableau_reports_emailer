@@ -15,7 +15,8 @@ class NoticeEmail:
 
         self.test_list = msg_to
         self.is_test = is_test
-        self.sg = sendgrid.SendGridAPIClient(os.environ.get('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'))
+        self.sg = sendgrid.SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        print("Sendgrid KEY being used: ", os.environ.get('SENDGRID_API_KEY'))
         self.to_email = msg_to
         self.from_email = msg_from
         self.subject = msg_subject
