@@ -172,7 +172,7 @@ def list_all_workbooks_on_server():
         tableau_obj = TableauObject(__default_config__['tableau_user'],
                                     __default_config__['tableau_password'],
                                     __default_config__['tableau_server'])
-        #tableau_obj.set_server_version('3.9')
+        tableau_obj.set_server_version('3.9')
         tableau_obj.get_all_workbooks()
         tableau_obj.print_all_workbooks()
     except Exception as e:
