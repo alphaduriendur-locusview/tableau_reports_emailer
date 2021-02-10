@@ -1,0 +1,15 @@
+{
+    "workbook_id": "7c68542d-83e7-42c1-b4fb-6972d7b7e1e3",
+    "views": [
+        {
+            "view_id": "b59b424a-002a-40d0-8de8-04376bfa9674",
+            "view_name": "NJN Inspections"
+        }
+    ],
+    "to": [
+        "kevin@locusview.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "NJN Inspections",
+    "test": true
+}

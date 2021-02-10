@@ -1,0 +1,16 @@
+{
+    "workbook_id": "7c68542d-83e7-42c1-b4fb-6972d7b7e1e3",
+    "views": [
+        {
+            "view_id": "345d6847-478f-4cf9-a8d3-5cd4885c15d7",
+            "view_name": "Gray Inspections"
+        }
+    ],
+    "to": [
+        "arko.basu@locusview.com",
+        "kevin@locusview.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Gray Inspections",
+    "test": true
+}

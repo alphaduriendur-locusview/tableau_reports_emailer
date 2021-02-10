@@ -1,0 +1,15 @@
+{
+    "workbook_id": "7c68542d-83e7-42c1-b4fb-6972d7b7e1e3",
+    "views": [
+        {
+            "view_id": "52801ac7-e02e-42d2-acf6-525fdc50936c",
+            "view_name": "JF Kiely Inspections"
+        }
+    ],
+    "to": [
+        "kevin@locusview.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "JF Kiely Inspections",
+    "test": true
+}
