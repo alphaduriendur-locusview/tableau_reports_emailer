@@ -1,0 +1,16 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "26731c95-0126-4e99-a4e3-0ecabc8d12c2",
+            "view_name": "Miller Pipeline - Failed Task Report"
+        }
+    ],
+    "to": [
+        "arko.basu@locusview.com",
+        "andrew.dunham@locusview.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Miller Pipeline - Failed Task Report",
+    "test": true
+}

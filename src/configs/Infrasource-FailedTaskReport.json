@@ -1,0 +1,26 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "4d173f84-6423-42ba-9eeb-0c1c3ffcd833",
+            "view_name": "Infrasource - Failed Task Report"
+        }
+    ],
+    "to": [
+        "stephen.sarmento@infrasourceinc.com",
+        "Pat.Dunham@infrasourceinc.com",
+        "beth.mccarron@infrasourceinc.com",
+        "hilton.kringe@infrasourceinc.com",
+        "richard.stewartsr@infrasourceinc.com",
+        "casey.barnick@infrasourceinc.com",
+        "Andrew.Smyth@infrasourceinc.com",
+        "Mike.Mullins@infrasourceinc.com",
+        "Chuck.Romano@infrasourceinc.com",
+        "Joseph.Smith@infrasourceinc.com",
+        "luke.foglio@infrasourceinc.com",
+        "john.rieksts@infrasourceinc.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Infrasource - Failed Task Report",
+    "test": true
+}

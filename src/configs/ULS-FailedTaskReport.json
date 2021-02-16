@@ -1,0 +1,22 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "2748ea59-4cae-4a4a-9325-0d52517cff3b",
+            "view_name": "ULS - Failed Task Report"
+        }
+    ],
+    "to": [
+        "cdippo@ulscorp.com",
+        "pmorrow@ulscorp.com",
+        "abowman@ulscorp.com",
+        "rbream@ulscorp.com",
+        "rpugh@ulscorp.com",
+        "jfavarulo@ulscorp.com",
+        "smoore@ulscorp.com",
+        "rbrunner@ulscorp.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "ULS - Failed Task Report",
+    "test": true
+}

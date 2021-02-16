@@ -1,0 +1,18 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "13180679-40f3-4cf7-afb2-387eaf096746",
+            "view_name": "BGE - Failed Task Report"
+        }
+    ],
+    "to": [
+        "rafael.olazagasti@bge.com",
+        "Candice.Shortridge@bge.com",
+        "joseph.regan@bge.com",
+        "Frank.M.Peusch@bge.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "BGE - Failed Task Report",
+    "test": true
+}

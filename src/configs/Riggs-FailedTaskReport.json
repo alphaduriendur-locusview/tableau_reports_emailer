@@ -1,0 +1,18 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "420e5029-7e4c-42cd-b02c-38fbc87cc267",
+            "view_name": "Riggs - Failed Task Report"
+        }
+    ],
+    "to": [
+        "Sdonadio@riggsdistler.com",
+        "adennehey@riggsdistler.com",
+        "NTolomeo@riggsdistler.com",
+        "tkenny@riggsdistler.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Riggs - Failed Task Report",
+    "test": true
+}
