@@ -1,0 +1,22 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "b06b8ee0-adc8-4866-a866-3a4e24cf1856",
+            "view_name": "USIC - Failed Task Report"
+        }
+    ],
+    "to": [
+        "GeorgeWelch@usicllc.com",
+        "NikkiaSimpkins@usicllc.com",
+        "SonyaSmith@usicllc.com",
+        "DianaSalamone@usicllc.com",
+        "WilliamBoyle@usicllc.com",
+        "MichaelFondots@usicllc.com",
+        "BryanLloyd@usicllc.com",
+        "WayneVincent@usicllc.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "USIC - Failed Task Report",
+    "test": true
+}

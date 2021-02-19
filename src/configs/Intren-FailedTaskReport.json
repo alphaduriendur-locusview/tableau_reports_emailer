@@ -1,0 +1,21 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "b0efa44b-b90b-4cc6-a0e4-2a6669f30389",
+            "view_name": "Intren - Failed Task Report"
+        }
+    ],
+    "to": [
+        "jnauman@intren.com",
+        "mturk@intren.com",
+        "murban@intren.com",
+        "rbeecher@intren.com",
+        "gcastellano@intren.com",
+        "scanestrini@intren.com",
+        "rpeterson@intren.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Intren - Failed Task Report",
+    "test": true
+}

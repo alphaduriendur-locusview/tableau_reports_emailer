@@ -1,0 +1,18 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "67c6bb5c-cd6d-401a-b457-4ae2f7a61f13",
+            "view_name": "PECO - Failed Task Report"
+        }
+    ],
+    "to": [
+        "Devin.McLaughlin@exeloncorp.com",
+        "marc.valentino@exeloncorp.com",
+        "chris.divalentino@peco-energy.com",
+        "alan.yun@exeloncorp.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "PECO - Failed Task Report",
+    "test": true
+}

@@ -1,0 +1,30 @@
+{
+    "workbook_id": "943ed122-6028-4aa4-ab62-8b7cf1854122",
+    "views": [
+        {
+            "view_id": "8e91376e-1722-44d8-ad6b-c2c679f178d1",
+            "view_name": "Henkels - Failed Task Report"
+        }
+    ],
+    "to": [
+        "erymsha@henkels.com",
+        "jguinn@henkels.com",
+        "gbrauckmann@henkels.com",
+        "kharper@henkels.com",
+        "bhettrick@henkles.com",
+        "kgausch@henkels.com",
+        "adiscianni@henkels.com",
+        "jrudolph@henkels.com",
+        "caevans@henkels.com",
+        "clong@henkels.com",
+        "derb@henkels.com",
+        "gyouwakim@henkels.com",
+        "bellis@henkels.com",
+        "wgriffith@henkels.com",
+        "jjwelte@henkels.com",
+        "escull@henkels.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Henkels - Failed Task Report",
+    "test": true
+}
