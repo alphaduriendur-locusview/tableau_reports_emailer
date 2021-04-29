@@ -1,0 +1,18 @@
+{
+    "workbook_id": "7c68542d-83e7-42c1-b4fb-6972d7b7e1e3",
+    "views": [
+        {
+            "view_id": "505598aa-4b1b-4c38-aea0-cc13ae95730c",
+            "view_name": "Monthly Advisement Summary"
+        }
+    ],
+    "to": [
+        "kevin@locusview.com",
+        "rashkenis@njng.com",
+        "bfriedman@njng.com",
+        "rsaliga@njng.com"
+    ],
+    "body": "<HTML>Please find the attachment below. Do not reply to this message. This is an automated email</HTML>",
+    "subject": "Monthly Advisement Summary",
+    "test": true
+}
